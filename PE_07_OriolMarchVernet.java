@@ -7,4 +7,24 @@ public class PE_07_OriolMarchVernet {
     public void main() {
        
     }
+
+    public void iniciarJoc() {
+       
+    }
+
+    public void iniciarTauler() {
+       
+    }
+
+    public void colocarPecesInicials() {
+       
+    }
+
+    // jugador actual = blanques
+    //Historial = []
+
+    public void mostrarTauler() {
+       
+    }
+
 }
