@@ -29,9 +29,10 @@ public class PE_07_OriolMarchVernet {
 
     public void principal() {
        iniciarJoc();
+       mostrarTauler();
 
          while (true) {
-            mostrarTauler();
+           
             // Demanar jugada al jugador actual
             // Validar jugada
             // Actualitzar tauler
@@ -58,10 +59,32 @@ public class PE_07_OriolMarchVernet {
 
     public void colocarPecesInicials() {
        // Negres fila 0 i 1.
+       tauler[0][0] = 't'; tauler[0][1] = 'c'; tauler[0][2] = 'a'; tauler[0][3] = 'd';
+       tauler[0][4] = 'r'; tauler[0][5] = 'a'; tauler[0][6] = 'c'; tauler[0][7] = 't';
+
+       for(int c = 0; c < SIZE; c++){
+        tauler[1][c] = 'p';
+       }
+
+       tauler[7][0] = 'T'; tauler[7][1] = 'C'; tauler[7][2] = 'A'; tauler[7][3] = 'D';
+       tauler[7][4] = 'R'; tauler[7][5] = 'A'; tauler[7][6] = 'C'; tauler[7][7] = 'T';
+       for(int c = 0; c < SIZE; c++){
+        tauler[6][c] = 'P';
+       }
     }
 
     public void mostrarTauler() {
-       
+       System.out.println();
+        
+    }
+
+    public void mostrarAjuda(){
+    System.out.println("---------- AJUDA/HELP ----------");
+    System.out.println("mou e2 e4   -> mou una peça d'e2 a e4");
+    System.out.println("ajuda       -> mostra aquesta ajuda");
+    System.out.println("rendir-se   -> acaba la partida");
+    System.out.println("Regles dels escacs -> Busca Google");
+    System.out.println("---------------------------");
     }
 
 }
