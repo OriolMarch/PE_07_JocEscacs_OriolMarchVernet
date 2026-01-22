@@ -74,7 +74,19 @@ public class PE_07_OriolMarchVernet {
     }
 
     public void mostrarTauler() {
-       System.out.println();
+      System.out.println();
+      System.out.println(" a b c d e f g h");
+
+      for(int f = 0;f < SIZE; f++){
+         System.out.print(8 - f  + " ");
+
+      for(int c = 0;c < SIZE; c++){
+         System.out.print(tauler[f][c] + " ");
+      }
+         System.out.println(" " + (8 - f));
+      }
+
+      System.out.println(" a b c d e f g h");
         
     }
 
