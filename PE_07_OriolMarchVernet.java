@@ -2,101 +2,133 @@ import java.util.Scanner;
 
 public class PE_07_OriolMarchVernet {
 
-    //Constants
+    String whitePlayer;
+    String blackPlayer;
+
+    // Constants
     static final int SIZE = 8;
     static final char EMPTY = '.';
 
-    // Estat del joc
-    char[][] tauler = new char[SIZE][SIZE];
-    int jugadorActual; // 0 = blanques, 1 = negres
+    // Game state
+    char[][] board = new char[SIZE][SIZE];
+    int currentPlayer; // 0 = white, 1 = black
 
-
-    // Historial
-    int numJugades;
-    String[] historial = new String[150];
+    // History
+    int moveCount;
+    String[] history = new String[150];
 
     Scanner sc = new Scanner(System.in);
+
     public static void main(String[] args) {
-    
-    PE_07_OriolMarchVernet p = new PE_07_OriolMarchVernet();
-    p.principal();
-
+        PE_07_OriolMarchVernet p = new PE_07_OriolMarchVernet();
+        p.mainGame();
     }
 
-    // Tauler 8x8
-    // Peces: rei, reina, torre, alfil, cavall, peó
-    // jugador actual = blanques
+    // 8x8 board
+    // Pieces: king, queen, rook, bishop, knight, pawn
+    // Current player starts as white
 
-    public void principal() {
-       iniciarJoc();
-       mostrarTauler();
+    public void mainGame() {
+        startGame();
+        showBoard();
 
-         while (true) {
-           
-            // Demanar jugada al jugador actual
-            // Validar jugada
-            // Actualitzar tauler
-            // Comprovar si hi ha escac i mat
-            // Canviar jugador actual
-            numJugades++;
-         }
+        while (true) {
+
+            // Ask move from current player
+            // Validate move
+            // Update board
+            // Check checkmate
+            // Change current player
+
+            moveCount++;
+        }
     }
 
-    public void iniciarJoc() {
-        iniciarTauler();
-        colocarPecesInicials();
-        jugadorActual = 0; // 0 = blanques, 1 = negres
-        numJugades = 0;
+    public void startGame() {
+        initBoard();
+        placeInitialPieces();
+        currentPlayer = 0; // 0 = white, 1 = black
+        moveCount = 0;
     }
 
-    public void iniciarTauler() {
-       for (int f = 0; f < SIZE; f++) {
-          for (int c = 0; c < SIZE; c++) {
-             tauler[f][c] = EMPTY;
-          }
-       }
+    public void initBoard() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                board[row][col] = EMPTY;
+            }
+        }
     }
 
-    public void colocarPecesInicials() {
-       // Negres fila 0 i 1.
-       tauler[0][0] = 't'; tauler[0][1] = 'c'; tauler[0][2] = 'a'; tauler[0][3] = 'd';
-       tauler[0][4] = 'r'; tauler[0][5] = 'a'; tauler[0][6] = 'c'; tauler[0][7] = 't';
+    public void placeInitialPieces() {
+        // Black pieces on rows 0 and 1
+        board[0][0] = 'r'; board[0][1] = 'n'; board[0][2] = 'b'; board[0][3] = 'q';
+        board[0][4] = 'k'; board[0][5] = 'b'; board[0][6] = 'n'; board[0][7] = 'r';
 
-       for(int c = 0; c < SIZE; c++){
-        tauler[1][c] = 'p';
-       }
+        for (int col = 0; col < SIZE; col++) {
+            board[1][col] = 'p';
+        }
 
-       tauler[7][0] = 'T'; tauler[7][1] = 'C'; tauler[7][2] = 'A'; tauler[7][3] = 'D';
-       tauler[7][4] = 'R'; tauler[7][5] = 'A'; tauler[7][6] = 'C'; tauler[7][7] = 'T';
-       for(int c = 0; c < SIZE; c++){
-        tauler[6][c] = 'P';
-       }
+        // White pieces on rows 7 and 6
+        board[7][0] = 'R'; board[7][1] = 'N'; board[7][2] = 'B'; board[7][3] = 'Q';
+        board[7][4] = 'K'; board[7][5] = 'B'; board[7][6] = 'N'; board[7][7] = 'R';
+
+        for (int col = 0; col < SIZE; col++) {
+            board[6][col] = 'P';
+        }
     }
 
-    public void mostrarTauler() {
-      System.out.println();
-      System.out.println(" a b c d e f g h");
+    public void showBoard() {
+        System.out.println();
+        System.out.println(" a b c d e f g h");
 
-      for(int f = 0;f < SIZE; f++){
-         System.out.print(8 - f  + " ");
+        for (int row = 0; row < SIZE; row++) {
+            System.out.print(8 - row + " ");
 
-      for(int c = 0;c < SIZE; c++){
-         System.out.print(tauler[f][c] + " ");
-      }
-         System.out.println(" " + (8 - f));
-      }
+            for (int col = 0; col < SIZE; col++) {
+                System.out.print(board[row][col] + " ");
+            }
+            System.out.println(" " + (8 - row));
+        }
 
-      System.out.println(" a b c d e f g h");
-        
+        System.out.println(" a b c d e f g h");
     }
 
-    public void mostrarAjuda(){
-    System.out.println("---------- AJUDA/HELP ----------");
-    System.out.println("mou e2 e4   -> mou una peça d'e2 a e4");
-    System.out.println("ajuda       -> mostra aquesta ajuda");
-    System.out.println("rendir-se   -> acaba la partida");
-    System.out.println("Regles dels escacs -> Busca Google");
-    System.out.println("---------------------------");
+    public void showHelp() {
+        System.out.println("---------- HELP ----------");
+        System.out.println("move e2 e4   -> moves a piece from e2 to e4");
+        System.out.println("help         -> shows this help");
+        System.out.println("resign       -> ends the game");
+        System.out.println("Chess rules  -> Google it");
+        System.out.println("--------------------------");
     }
 
+    public void askPlayers() {
+        whitePlayer = askName("White player name: ");
+        blackPlayer = askName("Black player name: ");
+    }
+
+    public String askName(String msg) {
+        String name;
+        while (true) {
+            System.out.print(msg);
+            name = sc.nextLine().trim();
+
+            if (name.isEmpty()) {
+                System.out.println("Name cannot be empty.");
+            } else if (isNumber(name)) {
+                System.out.println("Name cannot be a number.");
+            } else {
+                return name;
+            }
+        }
+    }
+
+    public boolean isNumber(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) < '0' || s.charAt(i) > '9') {
+                return false;
+            }
+        }
+        return true;
+    }
 }
