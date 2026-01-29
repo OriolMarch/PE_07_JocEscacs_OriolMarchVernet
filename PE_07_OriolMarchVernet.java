@@ -131,4 +131,13 @@ public class PE_07_OriolMarchVernet {
         }
         return true;
     }
+
+    public String askMove() {
+    System.out.print("Move (e2 e4 / resign): ");
+    return sc.nextLine().trim();
+}
+
+public boolean isResign(String s) {
+    return s.equalsIgnoreCase("resign");
+}
 }
