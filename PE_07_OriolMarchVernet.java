@@ -1,7 +1,12 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+
 
 public class PE_07_OriolMarchVernet {
 
+    // Array List 
+    ArrayList<Character> capturedByWhite = new ArrayList<>();
+    ArrayList<Character> capturedByBlack = new ArrayList<>();
     // Players
     String whitePlayer;
     String blackPlayer;
@@ -29,44 +34,55 @@ public class PE_07_OriolMarchVernet {
     // Main
 
     public void mainGame() {
-        askPlayers();
-        startGame();
-        showBoard();
+    askPlayers();
+    startGame();
+    showBoard();
+    showCaptured();
 
-        boolean gameOver = false;
+    boolean gameOver = false;
 
-        while (!gameOver) {
-            System.out.println();
-            System.out.println("Turn: " + getCurrentPlayerColor() + " (" + getCurrentPlayerName() + ")");
+    while (!gameOver) {
 
-            String move = askMove();
+        System.out.println();
+        System.out.print("Turn: ");
+        if (currentPlayer == 0) {
+            System.out.println("White (" + whitePlayer + ")");
+        } else {
+            System.out.println("Black (" + blackPlayer + ")");
+        }
 
-            // Comanda help
-            if (isHelp(move)) {
-                showHelp();
-                continue;
-            }
+        String move = askMove();
 
-            if (isResign(move)) {
-                System.out.println(getCurrentPlayerName() + " resigned. Game over.");
-                System.out.println("Winner: " + getOtherPlayerName());
-                gameOver = true;
-                continue;
-            }
+        if (isHelp(move)) {
+            showHelp();
+            continue;
+        }
 
-            // Moviment
-            boolean moved = processMove(move);
+        if (isResign(move)) {
+            System.out.println("Resign. Game over.");
+            System.out.print("Winner: ");
+            if (currentPlayer == 0) System.out.println(blackPlayer);
+            else System.out.println(whitePlayer);
 
-            if (moved) {
-                saveHistory(move);
-                moveCount++;
-                changeTurn();
-                showBoard();
-            } else {
-                System.out.println("Invalid move. Try again.");
-            }
+            gameOver = true;
+            printSummary();
+            break;
+        }
+
+        boolean moved = processMove(move);
+
+        if (moved) {
+            saveHistory(move);
+            moveCount++;
+            changeTurn();
+            showBoard();
+            showCaptured();
+        } else {
+            System.out.println("Invalid move. Try again.");
         }
     }
+}
+
 
     // Set-up
     public void startGame() {
@@ -269,5 +285,26 @@ public class PE_07_OriolMarchVernet {
         } else {
             return Character.isLowerCase(piece);
         }
+    }
+
+    public void showCaptured(){
+        System.out.println("Captured By White: ");
+        for(int i=0; i <capturedByWhite.size();i++){
+            System.out.println(capturedByWhite.get(i) + " ");
+        }
+        System.out.println();
+
+        for(int i=0; i<capturedByBlack.size();i++){
+            System.out.println(capturedByBlack.get(i) + " ");
+        }
+        System.out.println(); 
+
+    }
+
+    public void printSummary(){
+        System.out.println("Game Summary:");
+        for(int i=0; i<moveCount;i++){
+            System.out.println((i+1) + ". " + history[i]);
+        }   
     }
 }
