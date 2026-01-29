@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class PE_07_OriolMarchVernet {
 
+    // Players
     String whitePlayer;
     String blackPlayer;
 
@@ -13,42 +14,67 @@ public class PE_07_OriolMarchVernet {
     char[][] board = new char[SIZE][SIZE];
     int currentPlayer; // 0 = white, 1 = black
 
-    // History
+    // Historial
     int moveCount;
     String[] history = new String[150];
 
+    // Input
     Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        PE_07_OriolMarchVernet p = new PE_07_OriolMarchVernet();
-        p.mainGame();
+        PE_07_OriolMarchVernet game = new PE_07_OriolMarchVernet();
+        game.mainGame();
     }
 
-    // 8x8 board
-    // Pieces: king, queen, rook, bishop, knight, pawn
-    // Current player starts as white
+    // Main
 
     public void mainGame() {
+        askPlayers();
         startGame();
         showBoard();
 
-        while (true) {
+        boolean gameOver = false;
 
-            // Ask move from current player
-            // Validate move
-            // Update board
-            // Check checkmate
-            // Change current player
+        while (!gameOver) {
+            System.out.println();
+            System.out.println("Turn: " + getCurrentPlayerColor() + " (" + getCurrentPlayerName() + ")");
 
-            moveCount++;
+            String move = askMove();
+
+            // Comanda help
+            if (isHelp(move)) {
+                showHelp();
+                continue;
+            }
+
+            if (isResign(move)) {
+                System.out.println(getCurrentPlayerName() + " resigned. Game over.");
+                System.out.println("Winner: " + getOtherPlayerName());
+                gameOver = true;
+                continue;
+            }
+
+            // Moviment
+            boolean moved = processMove(move);
+
+            if (moved) {
+                saveHistory(move);
+                moveCount++;
+                changeTurn();
+                showBoard();
+            } else {
+                System.out.println("Invalid move. Try again.");
+            }
         }
     }
 
+    // Set-up
     public void startGame() {
         initBoard();
         placeInitialPieces();
-        currentPlayer = 0; // 0 = white, 1 = black
+        currentPlayer = 0; // Blanc comença
         moveCount = 0;
+        clearHistory();
     }
 
     public void initBoard() {
@@ -60,7 +86,7 @@ public class PE_07_OriolMarchVernet {
     }
 
     public void placeInitialPieces() {
-        // Black pieces on rows 0 and 1
+        // Negres 0 i 1.
         board[0][0] = 'r'; board[0][1] = 'n'; board[0][2] = 'b'; board[0][3] = 'q';
         board[0][4] = 'k'; board[0][5] = 'b'; board[0][6] = 'n'; board[0][7] = 'r';
 
@@ -68,7 +94,7 @@ public class PE_07_OriolMarchVernet {
             board[1][col] = 'p';
         }
 
-        // White pieces on rows 7 and 6
+        // Blanques 6 i 7
         board[7][0] = 'R'; board[7][1] = 'N'; board[7][2] = 'B'; board[7][3] = 'Q';
         board[7][4] = 'K'; board[7][5] = 'B'; board[7][6] = 'N'; board[7][7] = 'R';
 
@@ -77,30 +103,39 @@ public class PE_07_OriolMarchVernet {
         }
     }
 
-    public void showBoard() {
-        System.out.println();
-        System.out.println(" a b c d e f g h");
+    // Tauler
+  public void showBoard() {
 
-        for (int row = 0; row < SIZE; row++) {
-            System.out.print(8 - row + " ");
+    System.out.println();
+    System.out.println("      a   b   c   d   e   f   g   h");
+    System.out.println("    ---------------------------------");
 
-            for (int col = 0; col < SIZE; col++) {
-                System.out.print(board[row][col] + " ");
-            }
-            System.out.println(" " + (8 - row));
+    for (int row = 0; row < SIZE; row++) {
+        System.out.print(" " + (8 - row) + "  |");
+
+        for (int col = 0; col < SIZE; col++) {
+            System.out.print(" " + board[row][col] + " |");
         }
 
-        System.out.println(" a b c d e f g h");
+        System.out.println("  " + (8 - row));
+        System.out.println("    ---------------------------------");
     }
+
+    System.out.println("      a   b   c   d   e   f   g   h");
+}
+
+
+
 
     public void showHelp() {
         System.out.println("---------- HELP ----------");
-        System.out.println("move e2 e4   -> moves a piece from e2 to e4");
-        System.out.println("help         -> shows this help");
-        System.out.println("resign       -> ends the game");
-        System.out.println("Chess rules  -> Google it");
+        System.out.println("e2 e4   -> move a piece from e2 to e4");
+        System.out.println("help    -> show this help");
+        System.out.println("resign  -> resign the game");
         System.out.println("--------------------------");
     }
+
+    //Jugadors:
 
     public void askPlayers() {
         whitePlayer = askName("White player name: ");
@@ -132,12 +167,107 @@ public class PE_07_OriolMarchVernet {
         return true;
     }
 
-    public String askMove() {
-    System.out.print("Move (e2 e4 / resign): ");
-    return sc.nextLine().trim();
-}
+    public String getCurrentPlayerName() {
+        if (currentPlayer == 0) return whitePlayer;
+        return blackPlayer;
+    }
 
-public boolean isResign(String s) {
-    return s.equalsIgnoreCase("resign");
-}
+    public String getOtherPlayerName() {
+        if (currentPlayer == 0) return blackPlayer;
+        return whitePlayer;
+    }
+
+    public String getCurrentPlayerColor() {
+        if (currentPlayer == 0) return "White";
+        return "Black";
+    }
+
+    // Els inputs + comandes
+    public String askMove() {
+        System.out.print("Move (e2 e4 / help / resign): ");
+        return sc.nextLine().trim();
+    }
+
+    public boolean isHelp(String s) {
+        return s.equalsIgnoreCase("help");
+    }
+
+    public boolean isResign(String s) {
+        return s.equalsIgnoreCase("resign");
+    }
+
+   //Historial + Canvia de torn
+    public void changeTurn() {
+        if (currentPlayer == 0) currentPlayer = 1;
+        else currentPlayer = 0;
+    }
+
+    public void saveHistory(String move) {
+        if (moveCount < history.length) {
+            history[moveCount] = move;
+        }
+    }
+
+    public void clearHistory() {
+        for (int i = 0; i < history.length; i++) {
+            history[i] = null;
+        }
+    }
+
+    
+    // Falta validar totes les peçes (Reina,rei,peo ...)
+    public boolean processMove(String move) {
+        if (!isValidFormat(move)) {
+            System.out.println("Invalid format. Use: e2 e4");
+            return false;
+        }
+
+        int fromCol = move.charAt(0) - 'a';
+        int fromRow = 8 - (move.charAt(1) - '0');
+        int toCol   = move.charAt(3) - 'a';
+        int toRow   = 8 - (move.charAt(4) - '0');
+
+        char piece = board[fromRow][fromCol];
+
+        if (piece == EMPTY) {
+            System.out.println("No piece at origin.");
+            return false;
+        }
+
+        if (!isCurrentPlayerPiece(piece)) {
+            System.out.println("That piece is not yours.");
+            return false;
+        }
+
+        // Moviment bàsic, sense normas del joc d'escacs.
+        board[toRow][toCol] = piece;
+        board[fromRow][fromCol] = EMPTY;
+
+        return true;
+    }
+
+    public boolean isValidFormat(String move) {
+        if (move.length() != 5) return false;
+        if (move.charAt(2) != ' ') return false;
+
+        char c1 = move.charAt(0);
+        char r1 = move.charAt(1);
+        char c2 = move.charAt(3);
+        char r2 = move.charAt(4);
+
+        if (c1 < 'a' || c1 > 'h') return false;
+        if (c2 < 'a' || c2 > 'h') return false;
+        if (r1 < '1' || r1 > '8') return false;
+        if (r2 < '1' || r2 > '8') return false;
+
+        return true;
+    }
+
+    public boolean isCurrentPlayerPiece(char piece) {
+        if (currentPlayer == 0) {
+            return Character.isUpperCase(piece);
+        } else {
+            return Character.isLowerCase(piece);
+        }
+    }
 }
