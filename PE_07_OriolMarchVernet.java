@@ -90,8 +90,12 @@ public class PE_07_OriolMarchVernet {
         placeInitialPieces();
         currentPlayer = 0; // Blanc comença
         moveCount = 0;
+
+
         clearHistory();
+        capturedByWhite.clear();        capturedByBlack.clear();
     }
+    
 
     public void initBoard() {
         for (int row = 0; row < SIZE; row++) {
@@ -305,6 +309,7 @@ public class PE_07_OriolMarchVernet {
         System.out.println("Game Summary:");
         for(int i=0; i<moveCount;i++){
             System.out.println((i+1) + ". " + history[i]);
-        }   
+        }  
+        
     }
 }
